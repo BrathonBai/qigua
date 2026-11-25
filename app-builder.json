@@ -1,6 +1,6 @@
 {
   "package_name": "qigua",
-  "version": "0.7.0",
+  "version": "0.7.2",
   "app_name": "起卦",
   "bin_name": "qigua",
   "description": "Time-and-space plum-blossom hexagram casting: NTP clock, Chinese lunar calendar, one-key cast.",

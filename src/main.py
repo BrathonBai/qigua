@@ -28,9 +28,9 @@ import ui                                           # noqa: E402
 
 TEXTS_PER_PAGE = 4
 TEXT_WIDTH = 56
-KEY_POLL = 0.08
+KEY_POLL = 0.03
 LOG_PATH = "/tmp/qigua.log"
-__version__ = "0.7.0"
+__version__ = "0.7.2"
 
 CAST_KEYS = {"6", "enter", " "}
 BACK_KEYS = {"esc", "backspace"}
@@ -163,7 +163,9 @@ class App:
         return self._moment
 
     def cast_now(self, now: float) -> None:
-        m = astro.Moment(datetime.fromtimestamp(now, timezone.utc), self.lat, self.lon, self.tz)
+        # 复用按分钟缓存的 Moment：起卦用的年/月/日/时辰在同一分钟内不变，
+        # 这样按键就不用再跑一遍天文（CM0 上约 126ms，这是"按 6 卡一下"的来源）。
+        m = self.moment(now)
         self.cast = gua.cast(m)
         self.pages = self.cast.text_pages(per_page=TEXTS_PER_PAGE, width=TEXT_WIDTH)
         self.mode = "hex"

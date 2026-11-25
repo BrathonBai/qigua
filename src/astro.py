@@ -215,8 +215,20 @@ def _bisect_crossing(jd_guess: float, target_deg: float, span: float = 12.0) -> 
     return 0.5 * (lo + hi)
 
 
+_TERMS_CACHE: dict[tuple[int, int], list[tuple[float, int]]] = {}
+
+
 def solar_terms_around(jd: float, span_days: float = 200.0) -> list[tuple[float, int]]:
-    """返回 [jd, 黄经度数] 列表，覆盖 jd ± span_days 内的所有节气（一年 24 个）。"""
+    """返回 [jd, 黄经度数] 列表，覆盖 jd ± span_days 内的所有节气（一年 24 个）。
+
+    同一「历日 + 窗口」的结果直接复用：一次 Moment 会用它 4 次，时钟每分钟也会重算，
+    而这段展开黄经 + 二分的扫描是整套历法里最贵的一步（CM0 上约 30ms/次）。
+    """
+    key = (int(math.floor(jd + 0.5)), int(span_days))
+    hit = _TERMS_CACHE.get(key)
+    if hit is not None:
+        return hit
+
     out: list[tuple[float, int]] = []
     step = 4.0
     j = jd - span_days
@@ -246,6 +258,9 @@ def solar_terms_around(jd: float, span_days: float = 200.0) -> list[tuple[float,
         if dedup and abs(t - dedup[-1][0]) < 0.02:
             continue
         dedup.append((t, deg))
+    if len(_TERMS_CACHE) > 64:
+        _TERMS_CACHE.clear()
+    _TERMS_CACHE[key] = dedup
     return dedup
 
 
@@ -312,8 +327,15 @@ def _cst_midnight(jd: float) -> datetime:
     return _cst_wall(jd).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
+_MOON_CACHE: dict[tuple[int, int], list[datetime]] = {}
+
+
 def new_moons_around(jd: float, span_days: float = 200.0) -> list[datetime]:
-    """返回 jd ± span_days 内的朔日（CST 墙上日期 00:00）。"""
+    """返回 jd ± span_days 内的朔日（CST 墙上日期 00:00）。按「历日 + 窗口」缓存。"""
+    key = (int(math.floor(jd + 0.5)), int(span_days))
+    hit = _MOON_CACHE.get(key)
+    if hit is not None:
+        return hit
     k0 = int(math.floor((jd - span_days - 2451550.09766) / SYNODIC)) - 1
     k1 = int(math.ceil((jd + span_days - 2451550.09766) / SYNODIC)) + 1
     out = []
@@ -322,6 +344,9 @@ def new_moons_around(jd: float, span_days: float = 200.0) -> list[datetime]:
         if d not in out:
             out.append(d)
     out.sort()
+    if len(_MOON_CACHE) > 64:
+        _MOON_CACHE.clear()
+    _MOON_CACHE[key] = out
     return out
 
 
