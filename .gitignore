@@ -1,0 +1,24 @@
+# 构建产物
+dist/
+*.deb
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+.cache/
+.venv/
+venv/
+
+# 本地调试产物
+shots/
+*.log
+*.tmp
+
+# 编辑器
+.vscode/
+.idea/
+.DS_Store
+
+# 设备/私人配置
+config.local.json

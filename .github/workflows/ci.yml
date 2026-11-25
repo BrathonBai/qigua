@@ -1,0 +1,36 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Pillow
+        run: pip install --disable-pip-version-check pillow
+
+      - name: Calendar tests
+        run: python tests/test_astro.py
+
+      - name: Divination tests
+        run: python tests/test_gua.py
+
+      - name: Build .deb
+        run: python build_deb.py
+
+      - name: Store manifest / package pre-check
+        run: python tools/check_store.py
+
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: qigua-deb
+          path: dist/*.deb

@@ -1,0 +1,48 @@
+{
+  "package_name": "qigua",
+  "version": "0.7.0",
+  "app_name": "起卦",
+  "bin_name": "qigua",
+  "description": "Time-and-space plum-blossom hexagram casting: NTP clock, Chinese lunar calendar, one-key cast.",
+
+  "store": {
+    "summary": "Divination clock: NTP time, Chinese lunar calendar, press 6 to cast a hexagram.",
+    "description": "起卦 turns the CardputerZero into a pocket divination clock. The clock face is synced over NTP at launch; below it you get the Chinese lunar date and the four stem-branch pillars (year/month/day/hour), computed from scratch with true solar time corrected by longitude and the equation of time. Press 6 and the app casts a hexagram from that exact moment and place: the upper trigram comes from the calendar numbers, the lower trigram from the sun's azimuth at your latitude/longitude, the moving line from the hour. It then reads the hexagram in the classic plum-blossom way - body/use five-element relation, mutual hexagram for the process, changed hexagram for the outcome - and pages through a plain-language reading. H to see About.",
+    "locales": {
+      "zh-CN": {
+        "title": "起卦",
+        "summary": "时空梅花：数字时钟 + 农历干支四柱，按 6 键以当下时刻成卦。",
+        "description": "「起卦」把 CardputerZero 变成一只口袋里的时间罗盘。打开即是一个 NTP 校过的数字钟，下面是自算的中国农历与干支四柱（年月日时）——年柱立春换年、月柱节气换月、日柱子正换日，时柱取真太阳时（经度 + 均时差修正）。按 6 键即以此刻此地起卦：上卦取年月日之数，下卦取该时刻太阳所在方位，动爻取加时之数；再按梅花易数本门看体用五行生克、互卦过程、变卦结果，分页给出白话断语。按 H 看关于。"
+      },
+      "ja": {
+        "title": "起卦",
+        "summary": "時空梅花：デジタル時計・旧暦・干支四柱、6 キーで今この瞬間の卦を立てる。"
+      }
+    },
+    "icon": "assets/images/icon.png",
+    "screenshots": [
+      "assets/images/screenshot01.png",
+      "assets/images/screenshot02.png",
+      "assets/images/screenshot03.png",
+      "assets/images/screenshot04.png"
+    ],
+    "categories": ["Lifestyle", "Education"],
+    "permissions": {
+      "camera": false,
+      "microphone": false,
+      "imu": false,
+      "network": true,
+      "additional_hardware": false,
+      "background_service": false,
+      "external_display": false
+    },
+    "author": {
+      "display_name": "fiddling科技工作室",
+      "github": "BrathonBai",
+      "website": "https://fiddling.work"
+    },
+    "source_repo": "https://github.com/BrathonBai/qigua",
+    "license": "MIT",
+    "share_code": "QIGU"
+  }
+}
